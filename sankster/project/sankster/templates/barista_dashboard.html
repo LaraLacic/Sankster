@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bartender Panel - Antique Bar</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@700&family=Playfair+Display&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Georgia', serif;
+            background-color: #262626;
+            color: #d9b99b;
+            padding: 20px;
+            text-align: center;
+            margin: 0;
+        }
+
+        .navbar {
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+            padding: 10px 20px;
+            background-color: #333;
+        }
+
+        .login-button, .logout-button {
+            font-size: 16px;
+            padding: 8px 16px;
+            border-radius: 20px;
+            background-color: #d9b99b;
+            color: #262626;
+            text-decoration: none;
+            transition: background-color 0.3s;
+            font-weight: bold;
+            border: none;
+            cursor: pointer;
+        }
+
+        .login-button:hover, .logout-button:hover {
+            background-color: #c8a37e;
+        }
+
+        h1 {
+            font-family: 'Cinzel Decorative', cursive;
+            font-size: 48px;
+            margin-top: 30px;
+        }
+
+        h2 {
+            font-family: 'Playfair Display', serif;
+            margin-top: 30px;
+            text-decoration: underline;
+        }
+
+        form {
+            margin-top: 20px;
+        }
+
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            color: #262626;
+            background-color: #d9b99b;
+            border: none;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            font-weight: bold;
+        }
+
+        button:hover {
+            background-color: #c8a37e;
+        }
+
+        select {
+            padding: 10px;
+            font-size: 16px;
+            background-color: #444;
+            color: #fff;
+            border: 1px solid #d9b99b;
+            border-radius: 5px;
+            margin-right: 10px;
+        }
+
+        .order {
+            background-color: #3a3a3a;
+            border-radius: 12px;
+            padding: 15px;
+            margin: 10px auto;
+            border: 1px solid #d9b99b;
+            width: 80%;
+            box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.5);
+            text-align: left;
+        }
+
+        .order strong {
+            font-size: 20px;
+        }
+
+        .order-status {
+            font-style: italic;
+            color: #c8a37e;
+        }
+
+        ul {
+            padding-left: 20px;
+        }
+
+        li {
+            margin-bottom: 5px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="navbar">
+        <form method="POST" action="{% url 'logout' %}">
+            {% csrf_token %}
+            <button type="submit" class="logout-button">Logout</button>
+        </form>
+    </div>
+
+    <h1>Bartender Panel</h1>
+
+    <h2>Active Orders</h2>
+
+    {% for order in active_orders %}
+        <div class="order" id="order-{{ order.id }}">
+            <p><strong>Order #{{ order.id }}</strong> - Status: <span class="order-status">{{ order.get_status_display }}</span></p>
+            <ul>
+                {% for item in order.items.all %}
+                    <li>{{ item.menu_item.name }} x{{ item.quantity }}</li>
+                {% empty %}
+                    <li><em>No items.</em></li>
+                {% endfor %}
+            </ul>
+            <form method="post" action="{% url 'update_order_status' order.id %}">
+                {% csrf_token %}
+                <select name="status">
+                    <option value="received" {% if order.status == "received" %}selected{% endif %}>Received</option>
+                    <option value="ready" {% if order.status == "ready" %}selected{% endif %}>Ready</option>
+                </select>
+                <button type="submit">Update</button>
+            </form>
+        </div>
+    {% endfor %}
+
+    <script>
+        function fetchOrderStatus() {
+            fetch("/get-order-status/")
+            .then(response => response.json())
+            .then(data => {
+                if (data.orders) {
+                    data.orders.forEach(order => {
+                        let orderElement = document.getElementById(`order-` + order.id);
+                        if (orderElement) {
+                            let statusElement = orderElement.querySelector(".order-status");
+                            if (statusElement) {
+                                statusElement.innerText = " (Status: " + order.status + ")";
+                            }
+                        }
+                    });
+                }
+            })
+            .catch(error => console.error("Error fetching order status:", error));
+        }
+
+        setInterval(fetchOrderStatus, 5000);
+    </script>
+
+</body>
+</html>

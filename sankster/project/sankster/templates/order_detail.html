@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Add Items - Order #{{ order.id }}</title>
+    <style>
+        body {
+            font-family: 'Georgia', serif;
+            background-color: #262626;
+            color: #d9b99b;
+            padding: 20px;
+            text-align: center;
+            margin: 0;
+        }
+
+        .navbar {
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+            padding: 10px 20px;
+            background-color: #333;
+        }
+
+        .login-button {
+            font-size: 16px;
+            padding: 8px 16px;
+            border-radius: 20px;
+            background-color: #d9b99b;
+            color: #262626;
+            text-decoration: none;
+            transition: background-color 0.3s;
+            font-weight: bold;
+        }
+
+        .login-button:hover {
+            background-color: #c8a37e;
+        }
+
+        h2, h3 {
+            font-family: 'Playfair Display', serif;
+            color: #d9b99b;
+            margin-top: 30px;
+            text-decoration: underline;
+        }
+
+        form {
+            margin-top: 20px;
+        }
+
+        label, input, button {
+            font-size: 16px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+            margin-top: 15px;
+        }
+
+        input[type="number"] {
+            padding: 8px;
+            width: 100%;
+            max-width: 300px;
+            border-radius: 8px;
+            border: 1px solid #d9b99b;
+            background-color: #3a3a3a;
+            color: #d9b99b;
+        }
+
+        button {
+            padding: 10px 20px;
+            color: #262626;
+            background-color: #d9b99b;
+            border: none;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            margin-top: 20px;
+            font-weight: bold;
+        }
+
+        button:hover {
+            background-color: #c8a37e;
+        }
+
+        ul {
+            list-style-type: none;
+            padding: 0;
+            margin-top: 20px;
+            max-width: 400px;
+            margin-left: auto;
+            margin-right: auto;
+            text-align: left;
+        }
+
+        li {
+            background-color: #444;
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 10px;
+            box-shadow: 2px 2px 8px rgba(0,0,0,0.5);
+            font-size: 18px;
+        }
+
+        a {
+            color: #d9b99b;
+            text-decoration: none;
+            margin-top: 20px;
+            display: inline-block;
+            font-weight: bold;
+        }
+
+        a:hover {
+            color: #c8a37e;
+        }
+    </style>
+</head>
+<body>
+
+    <h2>Add Items to Order #{{ order.id }}</h2>
+
+    <form method="POST">
+        {% csrf_token %}
+        <label for="table_number">Table Number:</label>
+        <input type="number" name="table_number" id="table_number" value="{{ order.table_number|default_if_none:'' }}" min="1" required>
+        {{ form.as_p }}
+        <button type="submit">Add Item</button>
+    </form>
+
+    <h3>Current Items:</h3>
+    <ul>
+        {% for item in order.items.all %}
+            <li>{{ item.menu_item.name }} x{{ item.quantity }}</li>
+        {% endfor %}
+    </ul>
+
+    <a href="{% url 'server_dashboard' %}">Done</a>
+
+</body>
+</html>

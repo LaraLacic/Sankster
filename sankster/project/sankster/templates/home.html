@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Antique Bar</title>
+    <style>
+        body {
+            font-family: 'Georgia', serif;
+            background-color: #262626;
+            color: #d9b99b;
+            padding: 20px;
+            text-align: center;
+            margin: 0;
+        }
+
+        .navbar {
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+            padding: 10px 20px;
+            background-color: #262626;
+        }
+
+        .login-button {
+            font-size: 16px;
+            padding: 8px 16px;
+            border-radius: 20px;
+            background-color: #d9b99b;
+            color: #262626;
+            text-decoration: none;
+            transition: background-color 0.3s;
+            font-weight: bold;
+        }
+
+        .login-button:hover {
+            background-color: #c8a37e;
+        }
+
+        .logo {
+            font-size: 60px;
+            font-weight: bold;
+            letter-spacing: 5px;
+            margin-bottom: 20px;
+            font-family: 'Cinzel Decorative', cursive;
+            color: #d9b99b;
+        }
+
+        h2, h3 {
+            font-family: 'Playfair Display', serif;
+            text-decoration: underline;
+            margin-bottom: 15px;
+        }
+
+        form {
+            max-width: 400px;
+            background-color: #444;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px auto;
+            box-shadow: 3px 3px 10px rgba(0, 0, 0, 0.5);
+        }
+
+        label {
+            display: block;
+            margin-top: 10px;
+            font-size: 16px;
+            font-weight: bold;
+        }
+
+        input {
+            width: 100%;
+            padding: 8px;
+            margin-top: 5px;
+            border: 1px solid #d9b99b;
+            border-radius: 4px;
+            background-color: #333;
+            color: #d9b99b;
+        }
+
+        button {
+            margin-top: 15px;
+            background-color: #d9b99b;
+            color: #262626;
+            border: none;
+            padding: 10px;
+            width: 100%;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            font-weight: bold;
+        }
+
+        button:hover {
+            background-color: #c8a37e;
+        }
+
+        .messages {
+            list-style: none;
+            padding: 0;
+            max-width: 400px;
+            margin: 10px auto;
+        }
+
+        .messages li {
+            padding: 10px;
+            margin-bottom: 5px;
+            border-radius: 5px;
+            font-weight: bold;
+            background-color: #dc3545;
+            color: white;
+            border: 1px solid #a71d2a;
+        }
+
+        .menu-items {
+            max-width: 600px;
+            margin: 20px auto;
+        }
+
+        .menu-item {
+            display: flex;
+            align-items: center;
+            padding: 15px;
+            background-color: #444;
+            border-radius: 10px;
+            margin-bottom: 10px;
+            box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.5);
+            font-size: 18px;
+        }
+
+        .menu-item span {
+            flex-grow: 1;
+        }
+    </style>
+
+    <!-- Fancy font for h1 -->
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@700&display=swap" rel="stylesheet">
+</head>
+<body>
+
+    <div class="navbar">
+        <a href="{% url 'login' %}" class="login-button">Login</a>
+    </div>
+
+    <h1 class="logo">Šankster</h1>
+
+    <h2>Call a Waiter</h2>
+
+    {% if messages %}
+        <ul class="messages">
+            {% for message in messages %}
+                <li>{{ message }}</li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+
+    <form method="POST" action="{% url 'call_server' %}">
+        {% csrf_token %}
+        <label for="table_number">Table Number:</label>
+        <input type="number" name="table_number" id="table_number" min="1" required>
+        <button type="submit">Call</button>
+    </form>
+
+    <div class="menu-items">
+        <h3>Menu</h3>
+        {% for item in menu_items %}
+            <div class="menu-item">
+                <span>{{ item.name }} - {{ item.price }}€</span>
+            </div>
+        {% endfor %}
+    </div>
+
+</body>
+</html>

@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Edit Staff - Antique Bar</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@700&family=Playfair+Display&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Georgia', serif;
+            background-color: #262626;
+            color: #d9b99b;
+            padding: 20px;
+            text-align: center;
+            margin: 0;
+        }
+
+        .navbar {
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+            padding: 10px 20px;
+            background-color: #333;
+        }
+
+        .login-button {
+            font-size: 16px;
+            padding: 8px 16px;
+            border-radius: 20px;
+            background-color: #d9b99b;
+            color: #262626;
+            text-decoration: none;
+            transition: background-color 0.3s;
+            font-weight: bold;
+        }
+
+        .login-button:hover {
+            background-color: #c8a37e;
+        }
+
+        h1 {
+            font-family: 'Cinzel Decorative', cursive;
+            font-size: 42px;
+            margin-top: 30px;
+            margin-bottom: 20px;
+        }
+
+        form {
+            max-width: 500px;
+            margin: 0 auto 30px auto;
+            background-color: #333;
+            padding: 20px;
+            border-radius: 15px;
+            border: 2px solid #d9b99b;
+            text-align: left;
+        }
+
+        form label {
+            font-size: 16px;
+            display: block;
+            margin-top: 10px;
+            margin-bottom: 5px;
+        }
+
+        form input, form select {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 15px;
+            border-radius: 5px;
+            border: 1px solid #d9b99b;
+            background-color: #444;
+            color: #fff;
+        }
+
+        button {
+            width: 100%;
+            padding: 10px 20px;
+            font-size: 16px;
+            color: #262626;
+            background-color: #d9b99b;
+            border: none;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            font-weight: bold;
+            margin-top: 10px;
+        }
+
+        button:hover {
+            background-color: #c8a37e;
+        }
+
+        a {
+            color: #d9b99b;
+            font-size: 16px;
+            text-decoration: underline;
+            display: inline-block;
+            margin-top: 15px;
+        }
+
+        a:hover {
+            color: #c8a37e;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="navbar">
+        <a href="{% url 'logout' %}" class="login-button">Logout</a>
+    </div>
+
+    <h1>Edit Staff Member</h1>
+
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Save Changes</button>
+    </form>
+
+    <a href="{% url 'manage_staff' %}">← Back to Staff List</a>
+
+</body>
+</html>
